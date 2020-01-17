@@ -9,7 +9,7 @@ Remove-Item "$env:APPDATA\Microsoft\Windows\Cookies\*.*" -ErrorAction SilentlyCo
 
 $ExcludedUsers = "Public","Administrator","ADMINI~1"
 
-$LocalProfiles = $(Get-ChildItem -Path "C:\Users" | Where {($_.LastAccessTime) -lt (Get-Date).AddDays(-2)}).Name
+$LocalProfiles = $(Get-ChildItem -Path "C:\Users" | Where {($_.LastAccessTime) -lt (Get-Date).AddDays(-180)}).Name
 
 $Folders = (Get-ChildItem -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList").PSChildName
 
