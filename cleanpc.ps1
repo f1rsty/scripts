@@ -18,11 +18,11 @@ $Folders = (Get-ChildItem -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVers
 foreach ($LocalProfile in $LocalProfiles) {
     if(!($ExcludedUsers -like $LocalProfile)) {
         Write-Host "Deleting profile $LocalProfile"
-        Remove-Item -Path "C:\Users\$LocalProfile" -Force -WhatIf
+        Remove-Item -Path "C:\Users\$LocalProfile" -Force
         foreach ($Key in $Folders) {
             $Values = $(Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\$Key").ProfileImagePath
             if ($Values -match $LocalProfile) {
-                Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\$Key" -WhatIf
+                Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\$Key"
             }
         }
     }
