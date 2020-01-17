@@ -7,18 +7,19 @@ Remove-Item "$env:LOCALAPPDATA\Microsoft\Windows\Temporary Internet Files\*.*" -
 Remove-Item "$env:APPDATA\Microsoft\Windows\Cookies\Low\*.*" -ErrorAction SilentlyContinue
 Remove-Item "$env:APPDATA\Microsoft\Windows\Cookies\*.*" -ErrorAction SilentlyContinue
 
+$DaysOld = -180
+
 $ExcludedUsers = "Public","Administrator","ADMINI~1"
 
-$LocalProfiles = $(Get-ChildItem -Path "C:\Users" | Where {($_.LastAccessTime) -lt (Get-Date).AddDays(-180)}).Name
+$LocalProfiles = $(Get-ChildItem -Path "C:\Users" | Where {($_.LastAccessTime) -lt (Get-Date).AddDays($DaysOld)}).Name
 
 $Folders = (Get-ChildItem -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList").PSChildName
-
 
 
 foreach ($LocalProfile in $LocalProfiles) {
     if(!($ExcludedUsers -like $LocalProfile)) {
         Write-Host "Deleting profile $LocalProfile"
-        Remove-Item -Path "C:\Users\$LocalProfile" -Force
+        Remove-Item -Path "C:\Users\$LocalProfile" -Confirm False -Force
         foreach ($Key in $Folders) {
             $Values = $(Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\$Key").ProfileImagePath
             if ($Values -match $LocalProfile) {
@@ -27,4 +28,3 @@ foreach ($LocalProfile in $LocalProfiles) {
         }
     }
 }
-
