@@ -42,7 +42,7 @@ call :log "%CUR_DATE% %TIME% Current User: %CURRENT_USER%"
 call :log "%CUR_DATE% %TIME% Hostname: %HOSTNAME%"
 call :log "%CUR_DATE% %TIME% Uptime: %UPTIME%"
 call :log "%CUR_DATE% %TIME% Dragon Version: "
-%WMIC% product where "Name like '%Dragon%'" get Name,Version
+%WMIC% product where "Name like '%Dragon%'" get Name,Version >> "%LOGPATH%\%LOGFILE%" 2>NUL
 call :log "%CUR_DATE% %TIME% Folder Permissions: "
 icacls %APPDIR% >> "%LOGPATH%\%LOGFILE%"
 
