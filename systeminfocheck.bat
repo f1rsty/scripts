@@ -31,6 +31,10 @@ FOR /F "tokens=* USEBACKQ" %%F IN (`hostname`) DO (
 SET HOSTNAME=%%F
 )
 
+FOR /F "tokens=* USEBACKQ" %%F IN (`product where "Name like '%Dragon%'" get Name^,Version^`) DO (
+SET DRAGON_VERSION=%%F
+)
+
 title System Checker v%SCRIPT_VERSION% (%SCRIPT_UPDATED%)
 
 if not exist %LOGPATH% mkdir %LOGPATH%
@@ -41,8 +45,7 @@ call :log "%CUR_DATE% %TIME% Processor: %PROCESSOR_ARCHITECTURE%"
 call :log "%CUR_DATE% %TIME% Current User: %CURRENT_USER%"
 call :log "%CUR_DATE% %TIME% Hostname: %HOSTNAME%"
 call :log "%CUR_DATE% %TIME% Uptime: %UPTIME%"
-call :log "%CUR_DATE% %TIME% Dragon Version: "
-%WMIC% product where "Name like '%Dragon%'" get Name,Version >> "%LOGPATH%\%LOGFILE%" 2>NUL
+call :log "%CUR_DATE% %TIME% Dragon Version: %DRAGON_VERSION%"
 call :log "%CUR_DATE% %TIME% Folder Permissions: "
 icacls %APPDIR% >> "%LOGPATH%\%LOGFILE%"
 
