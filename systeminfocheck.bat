@@ -26,14 +26,6 @@ FOR /F "tokens=* USEBACKQ" %%F IN (`hostname`) DO (
 SET HOSTNAME=%%F
 )
 
-FOR /F "tokens=* USEBACKQ" %%F IN (`wmic product where "Name like '%Dragon%'" get Version`) DO (
-SET DRAGON_VERSION=%%F
-)
-
-FOR /F "tokens=* USEBACKQ" %%F IN (`icacls %APPDIR%`) DO (
-SET FOLDER_PERMISSIONS=%%F
-)
-
 title System Checker v%SCRIPT_VERSION% (%SCRIPT_UPDATED%)
 
 if not exist %LOGPATH% mkdir %LOGPATH%
@@ -43,8 +35,10 @@ call :log "%CUR_DATE% %TIME% %OS_VERSION%"
 call :log "%CUR_DATE% %TIME% Processor: %PROCESSOR_ARCHITECTURE%"
 call :log "%CUR_DATE% %TIME% Current User: %CURRENT_USER%"
 call :log "%CUR_DATE% %TIME% %HOSTNAME%"
-call :log "%CUR_DATE% %TIME% %DRAGON_VERSION%"
-call :log "%CUR_DATE% %TIME% %FOLDER_PERMISSIONS%"
+call :log "%CUR_DATE% %TIME% Dragon Version: "
+wmic product where "Name like '%Dragon%'" get Version >> "%LOGPATH%\%LOGFILE%"
+call :log "%CUR_DATE% %TIME% Folder Permissions: "
+icacls %APPDIR% >> "%LOGPATH%\%LOGFILE%"
 
 :::::::::::::::
 :: FUNCTIONS ::
