@@ -1,6 +1,7 @@
 :: Set location for logs
 set LOGPATH=%SystemDrive%\Logs
 set LOGFILE=%COMPUTERNAME%_system_information.log
+set APPDIR=%APPDATA%\Nuance\NaturallySpeaking12
 
 :::::::::::::::::::::
 :: PREP AND CHECKS ::
@@ -13,12 +14,37 @@ set SCRIPT_UPDATED=2-10-2020
 FOR /f %%a in ('WMIC OS GET LocalDateTime ^| find "."') DO set DTS=%%a
 set CUR_DATE=%DTS:~0,4%-%DTS:~4,2%-%DTS:~6,2%
 
+FOR /F "tokens=* USEBACKQ" %%F IN (`systeminfo ^| findstr /B /C:"OS Name" /C:"Physical Memory"`) DO (
+SET OS_VERSION=%%F
+)
+
+FOR /F "tokens=* USEBACKQ" %%F IN (`whoami`) DO (
+SET CURRENT_USER=%%F
+)
+
+FOR /F "tokens=* USEBACKQ" %%F IN (`hostname`) DO (
+SET HOSTNAME=%%F
+)
+
+FOR /F "tokens=* USEBACKQ" %%F IN (`wmic product where "Name like '%Dragon%'" get Version`) DO (
+SET DRAGON_VERSION=%%F
+)
+
+FOR /F "tokens=* USEBACKQ" %%F IN (`icacls %APPDIR%`) DO (
+SET FOLDER_PERMISSIONS=%%F
+)
+
 title System Checker v%SCRIPT_VERSION% (%SCRIPT_UPDATED%)
 
 if not exist %LOGPATH% mkdir %LOGPATH%
 if exist "%LOGPATH%\%LOGFILE%" del "%LOGPATH%\%LOGFILE%"
 
-call :log "%CUR_DATE% %TIME%   Targeting individual JRE versions..."
+call :log "%CUR_DATE% %TIME% %OS_VERSION%"
+call :log "%CUR_DATE% %TIME% Processor: %PROCESSOR_ARCHITECTURE%"
+call :log "%CUR_DATE% %TIME% Current User: %CURRENT_USER%"
+call :log "%CUR_DATE% %TIME% %HOSTNAME%"
+call :log "%CUR_DATE% %TIME% %DRAGON_VERSION%"
+call :log "%CUR_DATE% %TIME% %FOLDER_PERMISSIONS%"
 
 :::::::::::::::
 :: FUNCTIONS ::
