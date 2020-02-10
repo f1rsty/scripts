@@ -18,6 +18,10 @@ FOR /F "tokens=* USEBACKQ" %%F IN (`systeminfo ^| findstr /B /C:"OS Name" /C:"Ph
 SET OS_VERSION=%%F
 )
 
+FOR /F "tokens=* USEBACKQ" %%F IN (`net statistics workstation ^| findstr "since"`) DO (
+SET UPTIME=%%F
+)
+
 FOR /F "tokens=* USEBACKQ" %%F IN (`whoami`) DO (
 SET CURRENT_USER=%%F
 )
@@ -34,7 +38,8 @@ if exist "%LOGPATH%\%LOGFILE%" del "%LOGPATH%\%LOGFILE%"
 call :log "%CUR_DATE% %TIME% %OS_VERSION%"
 call :log "%CUR_DATE% %TIME% Processor: %PROCESSOR_ARCHITECTURE%"
 call :log "%CUR_DATE% %TIME% Current User: %CURRENT_USER%"
-call :log "%CUR_DATE% %TIME% %HOSTNAME%"
+call :log "%CUR_DATE% %TIME% Hostname: %HOSTNAME%"
+call :log "%CUR_DATE% %TIME% Uptime: %UPTIME%"
 call :log "%CUR_DATE% %TIME% Dragon Version: "
 wmic product where "Name like '%Dragon%'" get Version >> "%LOGPATH%\%LOGFILE%"
 call :log "%CUR_DATE% %TIME% Folder Permissions: "
