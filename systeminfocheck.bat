@@ -31,8 +31,8 @@ FOR /F "tokens=* USEBACKQ" %%F IN (`hostname`) DO (
 SET HOSTNAME=%%F
 )
 
-FOR /F "tokens=* delims= USEBACKQ" %%F IN (`product where "Name like '%%Dragon%%'" get Name^,Version^`) DO (
-SET DRAGON_VERSION=%%F
+FOR /F "tokens=* USEBACKQ" %%F IN (`product where "Name like '%%Dragon%%'" get Name^,Version^`) DO (
+SET DRAGON_VERSION.%%F
 )
 
 title System Checker v%SCRIPT_VERSION% (%SCRIPT_UPDATED%)
