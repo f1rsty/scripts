@@ -87,7 +87,8 @@ if ($response -eq 2) {
     Write-Host -ForegroundColor Green "Backing up macros to C:\Users\$env:username\Desktop\$username.dat"
 
     $directory = $(Get-ChildItem -Path "\\MHC-MSASNDVNMS1\Profiles\McLaren\DMNEv2\$username*\$username\current").FullName
-    New-PSDrive -Name "A" -Root $directory -PSProvider "FileSystem" -Confirm
+    New-PSDrive -Name "A" -Root $directory -PSProvider "FileSystem"
+    Clear-Host
     Push-Location -Path "A:"
     Copy-Item -Path "mycmds.dat" -Destination "C:\Users\$env:username\Desktop\$username.dat"
     Pop-Location
@@ -98,6 +99,8 @@ if ($response -eq 2) {
         $directoryToRemove = $(Get-ChildItem -Path "\\MHC-MSASNDVNMS1\Profiles\McLaren\DMNEv2\$username*").FullName
         Remove-Item -Path $directoryToRemove -WhatIf
     }
+
+    Write-Host -ForegroundColor Green "Please have the user attempt login"
 }
 
 if ($response -eq 3) {
