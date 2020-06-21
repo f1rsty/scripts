@@ -108,6 +108,7 @@ if ($answer -eq "N" -or $answer -eq "n") {
 
         if ($directories.Count -eq 0) {
             Write-Host -ForegroundColor Yellow "No locally cached profiles found, proceeding to next step."
+            Start-Sleep 2
             Step-Three
         }
 
@@ -160,6 +161,7 @@ if ($answer -eq "N" -or $answer -eq "n") {
 
                     if (Test-Path $lastKnownGood) {
                         Write-Host -ForegroundColor Green "Found a profile backup, attempting to restore"
+
                         New-PSDrive -Name "A" -Root $lastKnownGood -PSProvider "FileSystem" >$null
                         Push-Location -Path "A:"
                         Remove-Item -Path $directoryToDelete -WhatIf
@@ -194,10 +196,23 @@ if ($answer -eq "N" -or $answer -eq "n") {
                                 $directoryToRemove = $(Get-ChildItem -Path "\\MHC-MSASNDVNMS1\Profiles\McLaren\DMNEv2\$username*").FullName
                                 Remove-Item -Path $directoryToRemove -WhatIf
                             }
+
+                            do {
+                                $confirmAnswer = Read-Host -Prompt "Have user attempt to login. Did this solve the issue? [y/n]"
+                            } until ($confirmAnswer -eq "Y" -or $confirmAnswer -eq "y" -or $confirmAnswer -eq "N" -or $confirmAnswer -eq "n")
+
+                            if ($confirmAnswer -eq "Y" -or $confirmAnswer -eq "y") {
+                                exit
+                            }
+
+                            if ($confirmAnswer -eq "N" -or $confirmAnswer -eq "n") {
+                                exit
+                            }
                         }
                     }
 
                     Write-Host -ForegroundColor Yellow "Did not find a backup profile to restore to, proceeding to next step"
+                    Start-Sleep 2
                     # Add step 4 below
                     Step-Four
                 }
